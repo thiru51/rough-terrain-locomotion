@@ -21,6 +21,9 @@ Written, reviewed, and covered by passing tests.
 | Rollout collection, both stages (`tert/training/collect.py`) | [P] | Exercised against a stub env only |
 | Shared imitation loop (`tert/training/imitation.py`) | [P] | Eq. 6 and Eq. 7 are one optimiser |
 | VecEnv contract (`tert/backends/interface.py`) | [P] | No simulator bound yet |
+| Reward terms and composer (`tert/envs/rewards.py`) | [P] | Includes TERT's two sim-to-real additions |
+| Terrain curriculum (`tert/envs/terrain.py`) | [P] | NumPy heightfield; replaces `isaacgym.terrain_utils` |
+| A1 constants (`configs/robot/a1.yaml`) | [P] | Transcribed from the official release |
 | Paper→code map (`docs/code_map.md`) | [P] | |
 | Attribution ledger (`THIRD_PARTY.md`) | [P] | |
 
