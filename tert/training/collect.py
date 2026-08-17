@@ -1,14 +1,14 @@
-"""Rollout collection for both TERT training stages (paper Sec. IV-B).
+"""Rollout collection for both training passes.
 
 The two stages differ in exactly one respect — who chooses the action:
 
-    stage 1 (offline pretraining)  teacher acts, teacher labels
-    stage 2 (online correction)    TERT acts,    teacher labels
+    pass 1 (offline)            teacher acts, teacher labels
+    pass 2 (online correction)  the transformer acts, teacher labels
 
 The teacher labels every visited state either way, so both produce the same
-`Episode` type and feed the same optimiser. That is the DAgger structure: stage 2
-is not a different objective, it is the same objective evaluated on states the
-student actually reaches.
+`Episode` type and feed the same optimiser. That is the DAgger structure: pass 2
+is not a different objective, it is the same objective evaluated on the states
+the policy actually reaches.
 
 Collection is tensor-first — steps are appended to a dense `(num_steps, num_envs, ·)`
 buffer on device and segmented into episodes once, at the end. Segmenting per step
@@ -61,7 +61,7 @@ class _Rollout:
 
 @torch.no_grad()
 def collect_teacher_rollouts(env, teacher, proprio_dim: int, num_steps: int) -> list[Episode]:
-    """Stage 1: the teacher drives, using privileged observations it will not have later."""
+    """Pass 1: the teacher drives, using privileged observations the policy never gets."""
     obs = env.reset()
     rollout = _Rollout(num_steps, env.num_envs, proprio_dim, env.num_actions, env.device)
 
@@ -78,11 +78,11 @@ def collect_teacher_rollouts(env, teacher, proprio_dim: int, num_steps: int) -> 
 def collect_online_correction(
     env, tert, teacher, normalizer, proprio_dim: int, context_len: int, num_steps: int
 ) -> list[Episode]:
-    """Stage 2: TERT drives; the teacher labels the states TERT actually visits.
+    """Pass 2: the transformer drives; the teacher labels the states it actually visits.
 
     The teacher still reads privileged observations to produce its label, which is
-    legitimate — labelling happens in simulation only. TERT sees the normalised
-    proprioceptive window and nothing else.
+    fine — labelling only ever happens in simulation. The transformer sees the
+    normalised proprioceptive window and nothing else.
     """
     obs = env.reset()
     ctx = ContextWindow(env.num_envs, proprio_dim, env.num_actions, context_len, env.device)

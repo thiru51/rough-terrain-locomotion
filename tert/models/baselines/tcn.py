@@ -1,8 +1,8 @@
 """Temporal convolutional encoder — the RMA baseline's history model.
 
-Paper Sec. V-B: RMA estimates the privileged latent from the last 50
-proprioceptive observations. This is the model TERT replaces with a
-Transformer, so it is also the `TERT-TCN` ablation's sequence encoder.
+Estimates the privileged latent from the last 50 proprioceptive observations.
+This is the conventional history model the transformer replaces, so it doubles
+as the sequence encoder for the TCN ablation.
 
 Channel and stride layout follows the official release. Note it consumes
 observations only, not the actions taken — a real asymmetry with TERT, which

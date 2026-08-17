@@ -1,13 +1,13 @@
-"""Masked regression of TERT onto the teacher's actions (paper Eq. 6 and 7).
+"""Masked regression of the transformer onto the teacher's actions.
 
-Both training stages minimise the same loss
+Both training passes minimise the same loss
 
     L = sum_t (a_hat_t - a_bar_t)^2
 
 and differ only in the trajectory distribution the expectation is taken over, so
 one optimiser serves both. Keeping it in one place makes the ablations
-`TERT-w/o-OP` and `TERT-w/o-OC` a matter of which stages are run, not of which
-code path is taken.
+the single-pass ablations a matter of which passes are run, not of which code
+path is taken.
 """
 
 from dataclasses import dataclass

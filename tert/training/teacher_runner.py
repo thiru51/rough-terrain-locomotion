@@ -1,7 +1,7 @@
 """Training loop for the privileged teacher.
 
 Collect `num_steps_per_env` transitions across all environments, then run one
-PPO update. The paper trains for 20k such iterations at 4096 envs.
+PPO update. Full training is ~20k such iterations at 4096 environments.
 """
 
 from dataclasses import dataclass

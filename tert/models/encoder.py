@@ -1,4 +1,4 @@
-"""Privileged encoder mu: e_t -> l_t (paper Eq. 4).
+"""Privileged encoder: compresses what the robot cannot sense into a latent.
 
 The three privileged modalities are embedded separately before fusion, so the
 187-dim heightmap cannot swamp the 12-dim contact forces and 4 physics

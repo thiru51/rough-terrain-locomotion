@@ -1,4 +1,4 @@
-"""Terrain curriculum as a plain heightfield (paper Sec. V-A).
+"""Terrain curriculum as a plain heightfield.
 
 legged_gym builds its sub-terrains with `isaacgym.terrain_utils`. Isaac Gym is
 proprietary and Linux-only, so the generators are reimplemented here in NumPy:
@@ -36,7 +36,7 @@ class TerrainConfig:
     slope_threshold: float = 0.75
 
     # Difficulty scaling. TERT reduces the stair and obstacle ramps relative to
-    # upstream legged_gym, which matters: the paper's policy is blind, and
+    # upstream legged_gym, which matters here: this policy is blind, and
     # upstream's steps are not traversable without elevation input.
     max_slope: float = 0.4
     rough_amplitude: float = 0.05

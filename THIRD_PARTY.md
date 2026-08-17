@@ -1,6 +1,6 @@
 # Third-Party Attribution
 
-This repository is an independent implementation of **Terrain Transformer (TERT)**.
+This project implements the **Terrain Transformer (TERT)** method.
 It is not affiliated with, endorsed by, or released by the original authors.
 
 ## Original work
@@ -77,7 +77,7 @@ Recorded so that differences from the official release are auditable rather than
 
 ## Citation
 
-If you use this repository, cite the original paper. See `CITATION.cff`.
+If you build on this, cite the original paper:
 
 ```bibtex
 @inproceedings{lai2023tert,

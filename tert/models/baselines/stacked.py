@@ -1,4 +1,4 @@
-"""PPO and StackedPPO baselines (paper Sec. V-B).
+"""Flat PPO and stacked-history baselines.
 
 Neither uses privileged information at all — they are trained directly by PPO on
 proprioception, and serve as the floor the privileged-learning methods have to

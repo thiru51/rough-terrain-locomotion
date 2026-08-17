@@ -1,13 +1,12 @@
-"""Reward terms for the multi-terrain locomotion task (paper Sec. V-A).
+"""Reward terms for the multi-terrain locomotion task.
 
 Terms are pure functions of a `RobotState` snapshot, so they can be read, unit
 tested, and reweighted without a simulator in the loop. The environment's job is
 to fill the snapshot; composing and scaling happens here.
 
-The set follows legged_gym (Rudin et al.), with the two terms TERT adds for
-sim-to-real: a penalty on action magnitude and one on torque rate. Both suppress
-the high-frequency chatter that a policy can exploit in simulation and that
-destroys real actuators.
+The set follows legged_gym, plus two terms aimed at sim-to-real: a penalty on
+action magnitude and one on torque rate. Both suppress the high-frequency
+chatter a policy can exploit in simulation and that destroys real actuators.
 
 Scales are supplied by config, not hard-coded — see `configs/robot/a1.yaml`.
 """
@@ -105,7 +104,7 @@ def torques(s: RobotState) -> torch.Tensor:
 
 
 def torques_smooth(s: RobotState) -> torch.Tensor:
-    """TERT addition: penalise torque rate, not just magnitude."""
+    """Penalise torque rate, not just magnitude."""
     return _sq(s.last_torques - s.torques)
 
 
@@ -122,7 +121,7 @@ def action_rate(s: RobotState) -> torch.Tensor:
 
 
 def action_magnitude(s: RobotState) -> torch.Tensor:
-    """TERT addition: keep targets near the default pose.
+    """Keep targets near the default pose.
 
     Actions are offsets from the nominal joint angles, so this pulls the gait
     toward the pose the hardware is designed around.

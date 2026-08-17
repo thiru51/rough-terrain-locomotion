@@ -1,8 +1,11 @@
-# Paper → Official Code → This Repository
+# Reference notes
 
-Every row was verified by reading the official `TERT_code` release, not inferred from the
-paper text. Constants that the paper omits are marked **(code only)**; constants the paper
-states are cited by equation or section.
+Where every constant in this codebase came from, so none of them are mystery numbers.
+
+Values were read out of the original TERT release rather than guessed from the paper. A few
+things the paper never states — attention head count, the exact privileged breakdown — only
+exist in the code, and are marked **(code only)** below. Useful when something behaves oddly
+and you need to know whether a number is load-bearing or arbitrary.
 
 ## Core method
 

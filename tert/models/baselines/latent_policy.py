@@ -1,19 +1,19 @@
 """Policies that estimate the privileged latent instead of the action.
 
-Two of the paper's comparisons share this structure and differ only in the
-sequence model that produces `l_hat`:
+Both baselines here share one structure and differ only in the sequence model
+that produces `l_hat`:
 
-    RMA          TCN over the last 50 observations   (Sec. V-B baseline)
-    TERT-Latent  Transformer over the context window (Sec. V-C ablation)
+    TCN estimator          convolution over the last 50 observations
+    Transformer estimator   attention over the context window
 
-Both then feed `proprio | l_hat` to the *teacher's own actor*, kept frozen. That
-is what isolates the paper's claim: TERT proper skips the latent entirely and
-regresses the action end to end, so comparing against these two separates "the
-Transformer helps" from "predicting actions rather than a latent helps".
+Both feed `proprio | l_hat` to the *teacher's own actor*, kept frozen. Keeping
+them around separates two questions that are otherwise confounded: does the
+attention help, or does predicting the action end to end rather than a latent
+help? Swapping one factor at a time answers each.
 
-It also exposes the failure mode the paper attributes RMA's sand-pit and
-stair-down collapse to — the actor is only as good as `l_hat`, and nothing
-downstream can recover from a bad estimate.
+It also makes the weakness of this design visible. The actor sits downstream of
+`l_hat` and is frozen, so there is structurally no way to recover from a bad
+estimate — which is why the main policy skips the latent entirely.
 """
 
 import torch

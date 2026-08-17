@@ -1,5 +1,5 @@
 # Unitree A1 — values taken from the official TERT release, which overrides
-# legged_gym defaults. See docs/code_map.md for the source of each block.
+# legged_gym defaults. See docs/reference.md for the source of each block.
 
 robot:
   name: a1

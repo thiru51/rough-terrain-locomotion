@@ -1,7 +1,7 @@
 [project]
-name = "terrain-transformer-reimplementation"
+name = "rough-terrain-locomotion"
 version = "0.0.1"
-description = "Independent implementation of Terrain Transformer (Lai et al., ICRA 2023)"
+description = "Transformer policy for blind quadrupedal locomotion over rough terrain"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 dependencies = ["torch>=2.2", "numpy>=1.24", "pyyaml>=6.0"]

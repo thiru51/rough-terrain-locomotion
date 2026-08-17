@@ -1,4 +1,4 @@
-"""PPO for the teacher policy (paper Sec. IV-A).
+"""PPO for the teacher policy.
 
 Follows the rsl_rl configuration the official release trains with: clipped
 surrogate objective, GAE, clipped value loss, and a learning rate driven by

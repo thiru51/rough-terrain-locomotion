@@ -1,13 +1,13 @@
-"""Causal Transformer policy for TERT (paper Sec. III-B, Eq. 2-3).
+"""Causal Transformer policy over observation-action history.
 
 Trajectory tokens are interleaved (o_1, a_1, ..., o_T, a_T) -> 2T tokens, and the
 action head reads the *observation* token positions, so a_hat_t is conditioned on
-o_1, a_1, ..., o_t only. Returns-to-go are deliberately absent: the paper drops
-them from the Decision Transformer formulation.
+o_1, a_1, ..., o_t only.
 
-Independent implementation. Architecture follows the paper and the official
-release; the causal-GPT formulation derives from min-decision-transformer (MIT).
-See THIRD_PARTY.md.
+This is a Decision Transformer with the returns-to-go dropped — there is no
+return to condition on when the objective is "do what the teacher would do".
+The causal-GPT formulation derives from min-decision-transformer (MIT); see
+THIRD_PARTY.md.
 """
 
 from dataclasses import dataclass
@@ -27,9 +27,8 @@ class TransformerConfig:
     n_heads: int = 1
     dropout: float = 0.05
     max_timestep: int = 4096
-    # The official release uses post-LN blocks (min-DT style). Pre-LN is the
-    # modern default and trains more stably at depth; kept switchable so the
-    # deviation is an experiment rather than an accident.
+    # Post-LN matches the original; pre-LN is the modern default and trains more
+    # stably at depth. Switchable so the choice stays an experiment, not an accident.
     pre_ln: bool = False
 
 
@@ -55,7 +54,7 @@ class CausalSelfAttention(nn.Module):
             )
             weights = None
         else:
-            # Explicit path so attention maps can be inspected (paper Fig. 6).
+            # Explicit path so attention maps can be inspected.
             scores = q @ k.transpose(-2, -1) / self.head_dim**0.5
             causal = torch.ones(L, L, dtype=torch.bool, device=x.device).tril()
             scores = scores.masked_fill(~causal, float("-inf"))

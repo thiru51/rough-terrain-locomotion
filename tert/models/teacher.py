@@ -1,4 +1,4 @@
-"""Teacher policy with privileged access (paper Eq. 4-5), trained by PPO.
+"""Teacher policy with privileged access, trained by PPO.
 
 Observations arrive as `proprio | privileged`; the actor consumes
 `proprio | mu(privileged)`. The critic is symmetric — it sees the same encoded
