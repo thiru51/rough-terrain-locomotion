@@ -15,6 +15,12 @@ Written, reviewed, and covered by passing tests.
 | Causal Transformer (`tert/models/transformer.py`) | [P] | Causality and attention-normalisation asserted in tests |
 | Privileged encoder (`tert/models/encoder.py`) | [P] | 187/12/4 head widths |
 | Teacher actor-critic (`tert/models/teacher.py`) | [P] | Shape-tested only; never trained |
+| Observation normaliser (`tert/data/normalizer.py`) | [P] | Streaming fit; freezes after stage 1 |
+| Rolling context window (`tert/data/context.py`) | [P] | Shared by online correction and deployment |
+| Windowed dataset (`tert/data/dataset.py`) | [P] | Front-padded to match the context window |
+| Rollout collection, both stages (`tert/training/collect.py`) | [P] | Exercised against a stub env only |
+| Shared imitation loop (`tert/training/imitation.py`) | [P] | Eq. 6 and Eq. 7 are one optimiser |
+| VecEnv contract (`tert/backends/interface.py`) | [P] | No simulator bound yet |
 | Paper→code map (`docs/code_map.md`) | [P] | |
 | Attribution ledger (`THIRD_PARTY.md`) | [P] | |
 
@@ -39,8 +45,7 @@ or the paper.
 |---|---|---|
 | Isaac Gym env wrapper, terrain curriculum, reward set | [P] | Requires Isaac Gym Preview under WSL2 |
 | PPO teacher training loop | [P] | |
-| Offline pretraining: rollout collection + trajectory dataset | [P] | |
-| Online correction: DAgger-style relabelling | [P] | |
+| Stage driver scripts wiring collection → fit → checkpoint | [P] | |
 | Baselines: RMA/TCN, PPO, StackedPPO, GRU | [P] | |
 | Evaluation: return, smoothness, energy, fall rate, latency | [P] | |
 | Ablations: w/o-OC, w/o-OP, TCN, Latent | [P] | |
