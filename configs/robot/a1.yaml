@@ -1,0 +1,92 @@
+# Unitree A1 — values taken from the official TERT release, which overrides
+# legged_gym defaults. See docs/code_map.md for the source of each block.
+
+robot:
+  name: a1
+  urdf: resources/robots/a1/urdf/a1.urdf   # MPL-2.0, not vendored — see THIRD_PARTY.md
+  foot_name: foot
+  penalise_contacts_on: [thigh, calf]
+  terminate_after_contacts_on: [base]
+  self_collisions: false
+
+init_state:
+  pos: [0.0, 0.0, 0.42]
+  default_joint_angles:
+    FL_hip_joint: 0.1
+    RL_hip_joint: 0.1
+    FR_hip_joint: -0.1
+    RR_hip_joint: -0.1
+    FL_thigh_joint: 0.8
+    RL_thigh_joint: 1.0
+    FR_thigh_joint: 0.8
+    RR_thigh_joint: 1.0
+    FL_calf_joint: -1.5
+    RL_calf_joint: -1.5
+    FR_calf_joint: -1.5
+    RR_calf_joint: -1.5
+
+control:
+  # tau = kp (q_d - q) + kd (qdot_d - qdot); action is an offset from the
+  # default pose, scaled by action_scale.
+  stiffness: 55.0
+  damping: 0.8
+  action_scale: 0.25
+  decimation: 4          # 4 sim steps per policy step -> 50 Hz control
+  sim_dt: 0.005
+
+commands:
+  # Training holds a fixed forward speed; the paper does not sweep the command
+  # distribution, so lateral and yaw commands stay at zero.
+  lin_vel_x: [0.4, 0.4]
+  lin_vel_y: [0.0, 0.0]
+  ang_vel_yaw: [0.0, 0.0]
+  heading_command: true
+  resampling_time: 10.0
+
+normalization:
+  obs_scales:
+    lin_vel: 2.0
+    ang_vel: 0.25
+    dof_pos: 1.0
+    dof_vel: 0.05
+    height_measurements: 5.0
+    contact_force: 0.002
+    added_mass: 0.2
+  clip_observations: 100.0
+  clip_actions: 4.0
+
+domain_rand:
+  # The official release assigns these by deterministic bucketing on env_id
+  # rather than i.i.d. sampling, so every batch spans the full range and the
+  # privileged parameters the teacher reads are exactly reproducible per env.
+  friction_range: [0.5, 1.25]
+  added_mass_range: [0.0, 5.0]
+  kp_range: [45.0, 65.0]
+  kd_range: [0.70, 0.90]
+  push_interval_s: 15.0
+  max_push_vel_xy: 1.0
+
+rewards:
+  only_positive: true
+  tracking_sigma: 0.25
+  base_height_target: 0.25
+  soft_dof_pos_limit: 0.9
+  scales:
+    tracking_lin_vel: 1.0
+    tracking_ang_vel: 0.5
+    feet_air_time: 1.0
+    lin_vel_z: -2.0
+    ang_vel_xy: -0.05
+    collision: -1.0
+    dof_acc: -2.5e-7
+    action_rate: -0.01
+    torques: -0.0002          # A1 override of the legged_gym default
+    dof_pos_limits: -10.0     # A1 override
+    action_magnitude: -0.01   # TERT addition
+    torques_smooth: -0.0003   # TERT addition
+
+deploy:
+  # Paper Sec. V-D. Note kd differs from training: 8.0 on hardware vs 0.8 in sim.
+  control_frequency: 50.0
+  kp: 55.0
+  kd: 8.0
