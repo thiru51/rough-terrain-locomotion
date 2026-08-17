@@ -24,6 +24,8 @@ Written, reviewed, and covered by passing tests.
 | Reward terms and composer (`tert/envs/rewards.py`) | [P] | Includes TERT's two sim-to-real additions |
 | Terrain curriculum (`tert/envs/terrain.py`) | [P] | NumPy heightfield; replaces `isaacgym.terrain_utils` |
 | A1 constants (`configs/robot/a1.yaml`) | [P] | Transcribed from the official release |
+| PPO + rollout storage (`tert/training/ppo.py`) | [P] | GAE, clipped value loss, adaptive-KL lr |
+| Teacher training loop (`tert/training/teacher_runner.py`) | [P] | Runs against the stub env only |
 | Paper→code map (`docs/code_map.md`) | [P] | |
 | Attribution ledger (`THIRD_PARTY.md`) | [P] | |
 
@@ -46,8 +48,7 @@ or the paper.
 
 | Item | | |
 |---|---|---|
-| Isaac Gym env wrapper, terrain curriculum, reward set | [P] | Requires Isaac Gym Preview under WSL2 |
-| PPO teacher training loop | [P] | |
+| Isaac Gym backend binding the env to the simulator | [P] | Requires Isaac Gym Preview under WSL2 |
 | Stage driver scripts wiring collection → fit → checkpoint | [P] | |
 | Baselines: RMA/TCN, PPO, StackedPPO, GRU | [P] | |
 | Evaluation: return, smoothness, energy, fall rate, latency | [P] | |
