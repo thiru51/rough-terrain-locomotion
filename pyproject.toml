@@ -1,0 +1,30 @@
+[project]
+name = "terrain-transformer-reimplementation"
+version = "0.0.1"
+description = "Independent implementation of Terrain Transformer (Lai et al., ICRA 2023)"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = ["torch>=2.2", "numpy>=1.24", "pyyaml>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+# Isaac Gym Preview is not installable from PyPI. See docs/installation section
+# of README.md; it must be obtained from NVIDIA and installed into the same env.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["tert*", "robotics*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

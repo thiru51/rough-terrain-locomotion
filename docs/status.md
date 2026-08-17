@@ -1,0 +1,68 @@
+# Implementation Status
+
+Updated per commit. **No experiment has been run. No result in this repository is
+measured.** Any number quoted from the paper is labelled as the authors' result, never ours.
+
+Legend — **[P]** paper component · **[E]** our engineering extension
+
+## Completed
+
+Written, reviewed, and covered by passing tests.
+
+| Item | | Notes |
+|---|---|---|
+| Observation/privileged layout (`tert/envs/obs_spec.py`) | [P] | 48/203/251 verified against official source |
+| Causal Transformer (`tert/models/transformer.py`) | [P] | Causality and attention-normalisation asserted in tests |
+| Privileged encoder (`tert/models/encoder.py`) | [P] | 187/12/4 head widths |
+| Teacher actor-critic (`tert/models/teacher.py`) | [P] | Shape-tested only; never trained |
+| Paper→code map (`docs/code_map.md`) | [P] | |
+| Attribution ledger (`THIRD_PARTY.md`) | [P] | |
+
+## Implemented but unverified
+
+Code exists and imports cleanly; behaviour has not been validated against the simulator
+or the paper.
+
+| Item | | Blocker |
+|---|---|---|
+| — | | |
+
+## Partially implemented
+
+| Item | | Missing |
+|---|---|---|
+| — | | |
+
+## Planned
+
+| Item | | |
+|---|---|---|
+| Isaac Gym env wrapper, terrain curriculum, reward set | [P] | Requires Isaac Gym Preview under WSL2 |
+| PPO teacher training loop | [P] | |
+| Offline pretraining: rollout collection + trajectory dataset | [P] | |
+| Online correction: DAgger-style relabelling | [P] | |
+| Baselines: RMA/TCN, PPO, StackedPPO, GRU | [P] | |
+| Evaluation: return, smoothness, energy, fall rate, latency | [P] | |
+| Ablations: w/o-OC, w/o-OP, TCN, Latent | [P] | |
+| EKF / UKF base-state estimation | [E] | |
+| Sensor models: IMU, encoders, contact, depth | [E] | |
+| Frame transforms (world/body/sensor/joint) | [E] | |
+| PD, trajectory tracking, MPC interface | [E] | |
+| Terrain heightmap and traversability perception | [E] | |
+| C++ TorchScript inference runner at 50 Hz | [E] | |
+| ROS2 nodes, launch files, TF2 | [E] | |
+| Marine (AUV/ASV) transfer analysis | [E] | Research note, not code |
+
+## Known environment constraints
+
+- Isaac Gym Preview is Linux-only and login-walled at NVIDIA; the target runtime is
+  **WSL2 + Isaac Gym Preview 4** on an RTX 4080 Laptop (12 GB).
+- The official stack is Python 3.8 + torch 1.10+cu113. This repo targets Python ≥3.10 and
+  torch ≥2.2; divergence is recorded in `THIRD_PARTY.md`.
+- Teacher training is the dominant cost: 20,000 PPO iterations × 4096 envs.
+
+## Reproduction claim
+
+**None yet.** This repository is an *independent implementation in progress*. The wording
+will only change to a reproduction claim when the ablation and comparison scripts have
+actually been run and the outputs are committed under `results/`.

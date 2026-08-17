@@ -1,0 +1,37 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# training artifacts — never commit
+logs/
+runs/
+data/
+results/**
+!results/.gitkeep
+!results/schema.md
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.npy
+
+# third-party sources vendored locally for reference, not redistribution
+reference/
+isaacgym/
+
+# ROS2 / C++
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+cpp/build/
+
+# secrets
+.env
+*.pem
+*.key
