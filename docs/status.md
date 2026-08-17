@@ -31,6 +31,9 @@ Written, reviewed, and covered by passing tests.
 | Latent-estimator baselines (`tert/models/baselines/latent_policy.py`) | [C] | Frozen teacher actor + swappable estimator |
 | TCN encoder (`tert/models/baselines/tcn.py`) | [C] | 50-step history |
 | PPO / StackedPPO (`tert/models/baselines/stacked.py`) | [C] | Stacking is a stateless obs transform |
+| Evaluation metrics (`tert/eval/metrics.py`) | [C] | Masked at each env's first termination |
+| Policy runners + rollout (`tert/eval/rollout.py`) | [C] | One loop for four policy interfaces |
+| Experiment matrix (`tert/eval/suite.py`) | [C] | Tabulates and saves raw JSON |
 | Reference notes (`docs/reference.md`) | [C] | Where every constant came from |
 | Attribution ledger (`THIRD_PARTY.md`) | [C] | |
 
@@ -56,8 +59,7 @@ Code exists and imports cleanly, but has not been validated against real physics
 | Stage driver scripts wiring collection → fit → checkpoint | [C] | |
 | GRU baseline + recurrent PPO storage | [C] | Needs sequence minibatches; not started |
 | RMA latent-regression training loop | [C] | Models exist; the fit loop does not |
-| Evaluation: return, smoothness, energy, fall rate, latency | [C] | |
-| Ablations: single-pass, TCN encoder, latent target | [C] | |
+| Ablation configs wiring the suite to trained checkpoints | [C] | Harness exists; nothing to load yet |
 | EKF / UKF base-state estimation | [E] | |
 | Sensor models: IMU, encoders, contact, depth | [E] | |
 | Frame transforms (world/body/sensor/joint) | [E] | |
