@@ -26,6 +26,10 @@ Written, reviewed, and covered by passing tests.
 | A1 constants (`configs/robot/a1.yaml`) | [P] | Transcribed from the official release |
 | PPO + rollout storage (`tert/training/ppo.py`) | [P] | GAE, clipped value loss, adaptive-KL lr |
 | Teacher training loop (`tert/training/teacher_runner.py`) | [P] | Runs against the stub env only |
+| Shared actor-critic base (`tert/models/actor_critic.py`) | [P] | Teacher and baselines differ only in `_features` |
+| RMA / TERT-Latent (`tert/models/baselines/latent_policy.py`) | [P] | Frozen teacher actor + swappable estimator |
+| TCN encoder (`tert/models/baselines/tcn.py`) | [P] | 50-step history, official channel layout |
+| PPO / StackedPPO (`tert/models/baselines/stacked.py`) | [P] | Stacking is a stateless obs transform |
 | Paper→code map (`docs/code_map.md`) | [P] | |
 | Attribution ledger (`THIRD_PARTY.md`) | [P] | |
 
@@ -50,7 +54,8 @@ or the paper.
 |---|---|---|
 | Isaac Gym backend binding the env to the simulator | [P] | Requires Isaac Gym Preview under WSL2 |
 | Stage driver scripts wiring collection → fit → checkpoint | [P] | |
-| Baselines: RMA/TCN, PPO, StackedPPO, GRU | [P] | |
+| GRU baseline + recurrent PPO storage | [P] | Needs sequence minibatches; not started |
+| RMA latent-regression training loop | [P] | Models exist; the fit loop does not |
 | Evaluation: return, smoothness, energy, fall rate, latency | [P] | |
 | Ablations: w/o-OC, w/o-OP, TCN, Latent | [P] | |
 | EKF / UKF base-state estimation | [E] | |
