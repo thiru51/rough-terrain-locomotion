@@ -65,3 +65,11 @@ class TeacherActorCritic(nn.Module):
     @property
     def entropy(self):
         return self.distribution.entropy().sum(dim=-1)
+
+    @property
+    def action_mean(self):
+        return self.distribution.mean
+
+    @property
+    def action_std(self):
+        return self.distribution.stddev
