@@ -1,28 +1,10 @@
-"""Error-state EKF for quadruped base state.
+"""Error-state EKF for base pose, velocity and IMU biases.
 
-Estimates what the policy is handed but no sensor measures — `base_lin_vel` —
-by fusing IMU propagation with leg odometry.
+The nominal state carries the quaternion; the filter tracks a rotation-vector
+error about it, folded back and reset after each update, so the linearisation
+stays valid where it is evaluated.
 
-**Why error-state.** Orientation lives on a manifold; a quaternion has four
-numbers and three degrees of freedom. Carrying it directly in the filter state
-means the covariance is singular and normalisation fights the update. Instead
-the nominal state holds the full quaternion, the filter tracks a small
-*rotation-vector error* about it, and after each update the error is folded back
-in and reset to zero. The error stays near zero, so the linearisation the EKF
-depends on is valid where it is actually evaluated.
-
-    nominal   p (3)   v (3)   q (4)   b_a (3)   b_w (3)
-    error    dp (3)  dv (3)  dtheta (3)  db_a (3)  db_w (3)     -> 15 x 15 covariance
-
-**What is observable.** Roll and pitch are observable — gravity is a persistent
-reference. Yaw is not, from IMU and legs alone; it drifts, and no amount of
-tuning fixes that. Absolute position is likewise unobservable without an
-external reference. Velocity is observable *only while feet are planted and not
-slipping*, which is precisely the assumption that fails on the hard terrain. The
-filter cannot manufacture the information; the honest thing is to report the
-growing covariance, which `velocity_uncertainty` exposes.
-
-ENGINEERING EXTENSION — not part of the locomotion method.
+Yaw and absolute position are not observable from IMU and legs alone.
 """
 
 from dataclasses import dataclass, field
@@ -47,9 +29,7 @@ class EKFConfig:
     accel_bias_walk: float = 1e-3
     gyro_bias_walk: float = 1e-4
     gravity: float = 9.81
-    # Gate on normalised innovation squared. 3 DoF, ~99% -> 11.3. Slip produces
-    # a large, consistent innovation, and swallowing it biases velocity exactly
-    # when the policy is most sensitive to it.
+    # Normalised innovation squared, 3 DoF at ~99%. Slip shows up here.
     chi2_gate: float = 11.3
 
 
@@ -121,9 +101,8 @@ class ErrorStateEKF:
 
         H = np.zeros((3, 15))
         H[:, V] = R_wb.T
-        # Rotating world velocity into the body frame makes the measurement
-        # depend on attitude error too; dropping this term is a common bug that
-        # shows up as velocity error correlated with body pitch.
+        # Rotating into the body frame makes the measurement depend on attitude
+        # error too; omitting this shows up as velocity error tied to pitch.
         H[:, TH] = skew(R_wb.T @ self.state.velocity)
 
         innovation = np.asarray(velocity_body) - predicted
@@ -136,8 +115,7 @@ class ErrorStateEKF:
         K = self.covariance @ H.T @ np.linalg.inv(S)
         self._apply_correction(K @ innovation)
 
-        # Joseph form: stays symmetric positive-definite under finite precision,
-        # where the textbook (I - KH)P does not over a long run.
+        # Joseph form: stays symmetric positive-definite over long runs.
         IKH = np.eye(15) - K @ H
         self.covariance = IKH @ self.covariance @ IKH.T + K @ covariance @ K.T
         return True

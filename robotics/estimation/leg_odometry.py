@@ -1,26 +1,7 @@
-"""Base velocity from leg kinematics.
+"""Base velocity from planted feet, assuming no slip.
 
-If a foot is planted and not slipping, its world velocity is zero. That pins the
-base velocity:
-
-    v_base = -(v_foot_body + omega x p_foot_body)
-
-averaged over the feet currently in contact. This is the only thing on a blind
-quadruped that observes linear velocity at all — accelerometer integration alone
-drifts without bound.
-
-The assumption is exactly wrong on the terrain that matters. On sand, gravel or
-wet tile the stance foot *does* slip, and the measurement is biased in the
-direction of travel. So each foot is treated as a separate measurement and
-disagreement between them is used to detect slip: planted feet on rigid ground
-agree closely, a slipping foot is an outlier. Rejecting on that spread is
-cheaper and more reliable than trying to model the slip.
-
-Robot geometry is not hard-coded — foot positions and velocities in the body
-frame come from whatever forward-kinematics source is available (the simulator,
-or a URDF-driven FK on hardware). This module only owns the contact reasoning.
-
-ENGINEERING EXTENSION — not part of the locomotion method.
+The assumption fails on loose ground, so feet are fused individually and
+disagreement between them is used to detect slip.
 """
 
 from dataclasses import dataclass

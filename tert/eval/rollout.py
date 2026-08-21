@@ -1,15 +1,7 @@
-"""Uniform evaluation across policies with incompatible interfaces.
+"""Policy adapters and the evaluation loop.
 
-The policies being compared do not agree on what an "observation" is. The
-transformer wants a rolling window of normalised proprioception; the teacher
-wants the full privileged vector; the stacked baseline wants a flattened
-history; the latent baselines want a history buffer *and* the current step. The
-comparison is only fair if all of them meet the same environment through the
-same loop, so each gets a thin adapter exposing `reset` and `act`.
-
-Adapters own whatever buffers their policy needs, including clearing them per
-environment on termination — without which a policy conditions across a reset
-boundary and its numbers are quietly wrong.
+The policies being compared take different inputs; the adapters give them one
+interface so they all meet the environment through the same loop.
 """
 
 import time

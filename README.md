@@ -82,16 +82,23 @@ Some design notes worth reading if you're poking around:
 
 ## Setup
 
-Model and training code need only PyTorch and run on any machine:
+Everything except the simulator is plain PyTorch and NumPy, and runs anywhere:
 
 ```bash
-python -m venv .venv && .venv/Scripts/activate
+python -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 pytest
 ```
 
-Actually stepping a robot needs Isaac Gym Preview, which is Linux-only and has to come from
-NVIDIA directly. Target runtime is WSL2 with an NVIDIA GPU.
+I write this on a Windows laptop and run it on a Linux workstation with a real GPU, so
+nothing hard-codes a device or a path — modules take `device` and default to
+`tert.device.default_device()`, which picks CUDA when it's there. The repo normalises to
+LF via `.gitattributes`, so a clone on either OS is clean.
+
+Training on the workstation additionally needs Isaac Gym Preview, which is Linux-only and
+comes from NVIDIA directly. That's a lab-side setup step; none of the code here depends on
+it being installed.
 
 ## Status
 

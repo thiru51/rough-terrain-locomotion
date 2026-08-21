@@ -1,19 +1,7 @@
-"""Policies that estimate the privileged latent instead of the action.
+"""Estimator -> latent -> frozen teacher actor.
 
-Both baselines here share one structure and differ only in the sequence model
-that produces `l_hat`:
-
-    TCN estimator          convolution over the last 50 observations
-    Transformer estimator   attention over the context window
-
-Both feed `proprio | l_hat` to the *teacher's own actor*, kept frozen. Keeping
-them around separates two questions that are otherwise confounded: does the
-attention help, or does predicting the action end to end rather than a latent
-help? Swapping one factor at a time answers each.
-
-It also makes the weakness of this design visible. The actor sits downstream of
-`l_hat` and is frozen, so there is structurally no way to recover from a bad
-estimate — which is why the main policy skips the latent entirely.
+Covers both the RMA baseline and the latent-target ablation; they differ only in
+which sequence model produces the latent.
 """
 
 import torch

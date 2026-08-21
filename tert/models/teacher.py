@@ -1,9 +1,4 @@
-"""Teacher policy with privileged access, trained by PPO.
-
-Observations arrive as `proprio | privileged`; the actor consumes
-`proprio | mu(privileged)`. The critic is symmetric — it sees the same encoded
-latent rather than the raw privileged block, matching the official release.
-"""
+"""Teacher policy: proprioception plus encoded privileged obs, trained by PPO."""
 
 import torch
 

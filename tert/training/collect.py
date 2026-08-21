@@ -1,19 +1,7 @@
-"""Rollout collection for both training passes.
+"""Rollout collection.
 
-The two stages differ in exactly one respect — who chooses the action:
-
-    pass 1 (offline)            teacher acts, teacher labels
-    pass 2 (online correction)  the transformer acts, teacher labels
-
-The teacher labels every visited state either way, so both produce the same
-`Episode` type and feed the same optimiser. That is the DAgger structure: pass 2
-is not a different objective, it is the same objective evaluated on the states
-the policy actually reaches.
-
-Collection is tensor-first — steps are appended to a dense `(num_steps, num_envs, ·)`
-buffer on device and segmented into episodes once, at the end. Segmenting per step
-in Python costs `num_envs` small tensor ops per control step, which at 4096 envs
-dominates the simulator. Budget roughly `num_steps · num_envs · 72 · 4` bytes.
+Pass 1 the teacher acts and labels; pass 2 the policy acts and the teacher
+labels the states it reaches. Same Episode type either way.
 """
 
 import torch

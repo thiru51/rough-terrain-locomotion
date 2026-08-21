@@ -1,12 +1,7 @@
-"""Vectorised environment contract.
+"""Vectorised env protocol, matching legged_gym's signature.
 
-Written against legged_gym's signature so the Isaac Gym backend is a thin adapter,
-but nothing here imports a simulator: the training code is developed and tested
-against stubs and bound to a backend later.
-
-`step` returns the full observation `proprio | privileged` (251 for A1). Slicing
-the deployable part is the caller's job — that asymmetry is the whole point of
-privileged learning, so it stays visible rather than hidden behind the env.
+`step` returns the full `proprio | privileged` vector; slicing off the
+deployable part is the caller's job.
 """
 
 from typing import Any, Protocol, runtime_checkable

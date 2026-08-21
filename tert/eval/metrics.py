@@ -1,20 +1,4 @@
-"""Metrics for comparing locomotion policies.
-
-Everything is accumulated **only up to each environment's first termination**.
-Environments auto-reset, so continuing past a fall would silently average a
-failed episode together with a fresh one and make a policy that falls constantly
-look average. The mask is the difference between a meaningful number and a
-meaningless one.
-
-Reported quantities:
-
-    return       discounted-free sum of reward over the episode
-    smoothness   mean |a_t - a_{t-1}|, the chatter a real actuator pays for
-    energy       mean |tau . qdot|, mechanical power drawn
-    tracking     mean |v_xy - cmd_xy|, whether it actually goes where told
-    fall rate    fraction of environments that terminated for any reason but timeout
-    length       steps survived
-"""
+"""Locomotion metrics, accumulated up to each environment's first termination."""
 
 from dataclasses import dataclass, field
 
@@ -45,7 +29,7 @@ class EvalMetrics:
 
 @dataclass
 class MetricAccumulator:
-    """Per-environment running totals, frozen at each environment's first done."""
+    """Per-environment totals, frozen at each environment's first done."""
 
     num_envs: int
     device: torch.device | str = "cpu"

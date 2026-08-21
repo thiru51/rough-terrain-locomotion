@@ -1,0 +1,9 @@
+# Normalise to LF in the repository. Developed on Windows, run on Linux.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pt  binary
+*.npy binary
+*.dae binary
+*.stl binary

@@ -1,14 +1,4 @@
-"""Masked regression of the transformer onto the teacher's actions.
-
-Both training passes minimise the same loss
-
-    L = sum_t (a_hat_t - a_bar_t)^2
-
-and differ only in the trajectory distribution the expectation is taken over, so
-one optimiser serves both. Keeping it in one place makes the ablations
-the single-pass ablations a matter of which passes are run, not of which code
-path is taken.
-"""
+"""Masked MSE onto the teacher's actions. Shared by both training passes."""
 
 from dataclasses import dataclass
 

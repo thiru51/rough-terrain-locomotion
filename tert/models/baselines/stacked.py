@@ -1,17 +1,4 @@
-"""Flat PPO and stacked-history baselines.
-
-Neither uses privileged information at all — they are trained directly by PPO on
-proprioception, and serve as the floor the privileged-learning methods have to
-beat. StackedPPO widens the observation with a fixed history of past
-observations and actions; plain PPO is the same thing with `history_length = 1`,
-so one class covers both.
-
-The stacking is a stateless *observation transform*, not policy state. That
-matters for PPO: the optimiser re-evaluates stored observations in shuffled
-minibatches, so anything the policy needs must already be inside the stored
-observation vector. A policy carrying its own rolling buffer would silently
-evaluate the wrong history during the update.
-"""
+"""Flat and stacked-history PPO baselines. No privileged information."""
 
 import torch
 

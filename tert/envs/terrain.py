@@ -1,17 +1,7 @@
-"""Terrain curriculum as a plain heightfield.
+"""Terrain curriculum as a NumPy heightfield.
 
-legged_gym builds its sub-terrains with `isaacgym.terrain_utils`. Isaac Gym is
-proprietary and Linux-only, so the generators are reimplemented here in NumPy:
-terrain becomes a `(rows, cols)` int16 heightfield that any backend can convert
-to a trimesh, and terrain generation stays testable with no simulator installed.
-
-Layout follows TERT's modification of legged_gym: a deterministic grid of
-`num_rows` difficulty levels by `num_cols` terrain types, replacing upstream's
-randomised sampling. Rows are the curriculum axis — an environment is promoted
-or demoted a row according to how far it walked.
-
-    difficulty = row / num_rows          in [0, 1)
-    type       = col / num_cols + 1e-3   selects via cumulative proportions
+Reimplements the isaacgym.terrain_utils generators so terrain can be built and
+tested without a simulator. Deterministic difficulty x type grid.
 """
 
 from dataclasses import dataclass, field
@@ -35,9 +25,7 @@ class TerrainConfig:
     platform_size: float = 3.0  # m of flat ground at the centre, for spawning
     slope_threshold: float = 0.75
 
-    # Difficulty scaling. TERT reduces the stair and obstacle ramps relative to
-    # upstream legged_gym, which matters here: this policy is blind, and
-    # upstream's steps are not traversable without elevation input.
+    # Gentler than upstream legged_gym: a blind policy cannot climb its steps.
     max_slope: float = 0.4
     rough_amplitude: float = 0.05
     max_step_height: float = 0.10
@@ -73,11 +61,7 @@ def pyramid_slope(n: int, slope: float, cfg: TerrainConfig) -> np.ndarray:
 def random_rough(
     n: int, amplitude: float, cfg: TerrainConfig, rng: np.random.Generator
 ) -> np.ndarray:
-    """Uniform noise generated coarse and upsampled, so features exceed foot size.
-
-    Sampling at cell resolution would produce noise the robot filters out
-    mechanically; legged_gym downsamples to 0.2 m for the same reason.
-    """
+    """Uniform noise, generated at 0.2 m and upsampled so features exceed foot size."""
     step = max(1, int(0.2 / cfg.horizontal_scale))
     coarse_n = n // step + 2
     levels = int(amplitude / cfg.vertical_scale)
@@ -178,12 +162,10 @@ class TerrainGrid:
                 self.heightfield[i : i + n, j : j + n] = tile
 
     def update_levels(self, levels, distance_walked, commanded_distance):
-        """Promote or demote terrain rows after an episode (legged_gym curriculum).
+        """Promote or demote terrain rows after an episode.
 
-        Promotion requires crossing half the tile; demotion follows from walking
-        less than half what was commanded. Robots that solve the hardest row are
-        wrapped to a random row rather than pinned at the top, which keeps easy
-        terrain in the data distribution instead of letting the policy forget it.
+        Solving the top row wraps to a random row rather than pinning there, so
+        easy terrain stays in the distribution.
         """
         top = self.cfg.num_rows - 1
         levels = levels + (distance_walked > self.cfg.terrain_length / 2).long()

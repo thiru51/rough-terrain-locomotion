@@ -1,16 +1,7 @@
-"""Rotation utilities for state estimation.
+"""Quaternion helpers. Hamilton convention, [w, x, y, z], body-to-world.
 
-NumPy rather than torch, deliberately: this runs on one robot at a time, on a
-CPU, inside a hard real-time loop — there is no batch to vectorise over, and the
-whole subsystem is meant to be portable to the C++ node later. Nothing here
-should acquire a GPU dependency.
-
-Quaternions are `[w, x, y, z]`, Hamilton convention, representing a rotation
-from body frame to world frame. Getting the convention wrong is the classic
-silent estimator bug: everything runs, nothing diverges immediately, and the
-robot drifts sideways.
-
-ENGINEERING EXTENSION — not part of the locomotion method.
+NumPy rather than torch: one robot, one CPU, and this should port to the C++
+node later.
 """
 
 import numpy as np

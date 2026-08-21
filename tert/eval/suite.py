@@ -1,19 +1,4 @@
-"""Experiment matrix: policies x conditions.
-
-One harness covers every comparison worth running — the deployable policy against
-the baselines, ablations of it against itself, and either of those swept over
-terrain type or randomisation level. They are all "run these policies under these
-conditions and tabulate", so they share code rather than each getting a script
-that drifts out of sync with the others.
-
-Policies and environments are supplied as factories, not instances, so every cell
-gets a freshly seeded environment and no state leaks between runs.
-
-This module measures; it does not interpret. It will happily tabulate a policy
-that was never trained, and the numbers will be meaningless — which is the point,
-since the alternative is a script that quietly refuses to run until everything is
-perfect.
-"""
+"""Policy x condition experiment matrix."""
 
 import json
 from collections.abc import Callable

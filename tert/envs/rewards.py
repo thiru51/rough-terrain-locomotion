@@ -1,15 +1,4 @@
-"""Reward terms for the multi-terrain locomotion task.
-
-Terms are pure functions of a `RobotState` snapshot, so they can be read, unit
-tested, and reweighted without a simulator in the loop. The environment's job is
-to fill the snapshot; composing and scaling happens here.
-
-The set follows legged_gym, plus two terms aimed at sim-to-real: a penalty on
-action magnitude and one on torque rate. Both suppress the high-frequency
-chatter a policy can exploit in simulation and that destroys real actuators.
-
-Scales are supplied by config, not hard-coded — see `configs/robot/a1.yaml`.
-"""
+"""Reward terms as pure functions of a RobotState snapshot."""
 
 from dataclasses import dataclass, field
 
@@ -67,11 +56,8 @@ def tracking_ang_vel(s: RobotState) -> torch.Tensor:
 
 
 def feet_air_time(s: RobotState) -> torch.Tensor:
-    """Reward for swing duration, credited at touchdown.
-
-    Encourages long strides rather than the high-frequency shuffle that
-    velocity tracking alone admits. Gated on a nonzero command so standing
-    still is not rewarded for holding a foot up.
+    """Swing duration, credited at touchdown. Gated on a nonzero command so
+    standing still earns nothing for holding a foot up.
     """
     reward = torch.sum((s.feet_air_time - 0.5) * s.first_contact, dim=1)
     return reward * (torch.norm(s.commands[:, :2], dim=1) > 0.1)
@@ -121,11 +107,7 @@ def action_rate(s: RobotState) -> torch.Tensor:
 
 
 def action_magnitude(s: RobotState) -> torch.Tensor:
-    """Keep targets near the default pose.
-
-    Actions are offsets from the nominal joint angles, so this pulls the gait
-    toward the pose the hardware is designed around.
-    """
+    """Actions are offsets from the nominal pose, so this keeps the gait near it."""
     return _sq(s.actions)
 
 
@@ -171,12 +153,11 @@ TERMS = {
 
 @dataclass
 class RewardComposer:
-    """Weighted sum of the enabled terms.
+    """Weighted sum of enabled terms.
 
-    Scales are multiplied by `dt` at construction, matching legged_gym, so that
-    reward magnitudes are invariant to control frequency. `only_positive` clips
-    the total at zero: early in training the penalties dominate, and a policy
-    that can accumulate negative return learns to terminate itself.
+    Scales are multiplied by dt so magnitudes are invariant to control rate.
+    `only_positive` clips at zero: a policy that can accumulate negative return
+    learns to terminate itself.
     """
 
     scales: dict[str, float]

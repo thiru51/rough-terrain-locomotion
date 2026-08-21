@@ -1,12 +1,4 @@
-"""PPO for the teacher policy.
-
-Follows the rsl_rl configuration the official release trains with: clipped
-surrogate objective, GAE, clipped value loss, and a learning rate driven by
-measured KL divergence rather than a fixed schedule.
-
-Only the teacher is trained by RL. TERT itself never sees a policy gradient —
-it is fit by regression onto the teacher's actions (`tert/training/imitation.py`).
-"""
+"""PPO for the teacher: clipped surrogate, GAE, KL-adaptive learning rate."""
 
 from dataclasses import dataclass
 
@@ -50,9 +42,8 @@ class RolloutStorage:
     def add(self, obs, actions, rewards, dones, values, log_probs, mu, sigma, timeouts=None):
         i = self.step
         if timeouts is not None:
-            # A truncated episode has not actually ended, so bootstrap its value
-            # back in. Without this the agent learns that the time limit is a
-            # terminal state worth avoiding.
+            # Truncation is not termination: bootstrap the value back in, or the
+            # agent learns to avoid the time limit by ending episodes early.
             rewards = rewards + self.gamma * values * timeouts.float()
 
         self.obs[i], self.actions[i] = obs, actions
@@ -108,11 +99,10 @@ class PPO:
         self.optimizer = torch.optim.Adam(policy.parameters(), lr=cfg.learning_rate)
 
     def _adapt_learning_rate(self, batch, mu, sigma):
-        """Move the step size so the policy update stays near `desired_kl`.
+        """Rescale the step size to keep the update near `desired_kl`.
 
-        A fixed learning rate either stalls or destabilises as the action
-        distribution's scale drifts over training; rsl_rl measures the actual KL
-        between the old and new Gaussians and rescales accordingly.
+        The action distribution's scale drifts a lot over 20k iterations, so a
+        fixed rate either stalls or blows up.
         """
         if self.cfg.schedule != "adaptive":
             return

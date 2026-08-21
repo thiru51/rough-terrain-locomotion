@@ -1,13 +1,8 @@
-"""Causal Transformer policy over observation-action history.
+"""Causal transformer over interleaved (obs, action) tokens.
 
-Trajectory tokens are interleaved (o_1, a_1, ..., o_T, a_T) -> 2T tokens, and the
-action head reads the *observation* token positions, so a_hat_t is conditioned on
-o_1, a_1, ..., o_t only.
-
-This is a Decision Transformer with the returns-to-go dropped — there is no
-return to condition on when the objective is "do what the teacher would do".
-The causal-GPT formulation derives from min-decision-transformer (MIT); see
-THIRD_PARTY.md.
+The action head reads observation-token positions, so a_t depends on o_1..o_t
+and nothing later. No returns-to-go: there is no return to condition on when the
+target is the teacher's action.
 """
 
 from dataclasses import dataclass

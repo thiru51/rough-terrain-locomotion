@@ -1,9 +1,4 @@
-"""Privileged encoder: compresses what the robot cannot sense into a latent.
-
-The three privileged modalities are embedded separately before fusion, so the
-187-dim heightmap cannot swamp the 12-dim contact forces and 4 physics
-parameters in a single input projection.
-"""
+"""Encodes privileged observations into a latent for the teacher."""
 
 import torch
 import torch.nn as nn

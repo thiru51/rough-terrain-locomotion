@@ -1,18 +1,4 @@
-"""Temporal convolutional encoder — the RMA baseline's history model.
-
-Estimates the privileged latent from the last 50 proprioceptive observations.
-This is the conventional history model the transformer replaces, so it doubles
-as the sequence encoder for the TCN ablation.
-
-Channel and stride layout follows the official release. Note it consumes
-observations only, not the actions taken — a real asymmetry with TERT, which
-attends over interleaved observation-action tokens.
-
-The strided stack collapses the time axis fast, so histories shorter than ~40
-steps leave nothing to convolve. That is a property of the architecture rather
-than a tunable, so it is checked at construction instead of failing later inside
-a conv with an opaque shape error.
-"""
+"""TCN latent estimator (RMA-style) over a 50-step proprioceptive history."""
 
 import torch
 import torch.nn as nn

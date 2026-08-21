@@ -1,10 +1,4 @@
-"""Shared Gaussian actor-critic plumbing.
-
-The teacher and the PPO-trained baselines differ only in how they turn an
-observation into a feature vector. Everything downstream — the Gaussian head,
-the state-independent log-std, the distribution bookkeeping PPO reads — is
-identical, so subclasses override `_features` and nothing else.
-"""
+"""Gaussian actor-critic base. Subclasses override `_features` and nothing else."""
 
 import torch
 import torch.nn as nn
