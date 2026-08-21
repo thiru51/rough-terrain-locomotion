@@ -39,6 +39,8 @@ Written, reviewed, and covered by passing tests.
 | Rotation utilities (`robotics/transforms/rotations.py`) | [E] | Hamilton quaternions, NumPy, CPU |
 | Leg odometry (`robotics/estimation/leg_odometry.py`) | [E] | Slip detection by inter-foot disagreement |
 | Error-state EKF (`robotics/estimation/ekf.py`) | [E] | 15-state, Joseph form, chi-squared gating |
+| TorchScript export (`tert/deployment/export.py`) | [E] | Normalisation folded into the artifact |
+| C++ context buffer (`cpp/.../context_buffer.hpp`) | [E] | Builds and passes standalone, no LibTorch |
 
 ## Implemented but unverified
 
@@ -46,7 +48,8 @@ Code exists and imports cleanly, but has not been validated against real physics
 
 | Item | | Blocker |
 |---|---|---|
-| — | | |
+| C++ PolicyRunner (`cpp/.../policy_runner.cpp`) | [E] | Written; needs LibTorch + CMake to compile, done lab-side |
+| Latency benchmark (`cpp/.../benchmark_policy.cpp`) | [E] | Same |
 
 ## Partially implemented
 
@@ -68,7 +71,7 @@ Code exists and imports cleanly, but has not been validated against real physics
 | Frame transforms (world/body/sensor/joint) | [E] | |
 | PD, trajectory tracking, MPC interface | [E] | |
 | Terrain heightmap and traversability perception | [E] | |
-| C++ TorchScript inference runner at 50 Hz | [E] | |
+
 | ROS2 nodes, launch files, TF2 | [E] | |
 | Marine (AUV/ASV) transfer analysis | [E] | Research note, not code |
 
