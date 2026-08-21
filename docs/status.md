@@ -36,6 +36,9 @@ Written, reviewed, and covered by passing tests.
 | Experiment matrix (`tert/eval/suite.py`) | [C] | Tabulates and saves raw JSON |
 | Reference notes (`docs/reference.md`) | [C] | Where every constant came from |
 | Attribution ledger (`THIRD_PARTY.md`) | [C] | |
+| Rotation utilities (`robotics/transforms/rotations.py`) | [E] | Hamilton quaternions, NumPy, CPU |
+| Leg odometry (`robotics/estimation/leg_odometry.py`) | [E] | Slip detection by inter-foot disagreement |
+| Error-state EKF (`robotics/estimation/ekf.py`) | [E] | 15-state, Joseph form, chi-squared gating |
 
 ## Implemented but unverified
 
@@ -60,7 +63,7 @@ Code exists and imports cleanly, but has not been validated against real physics
 | GRU baseline + recurrent PPO storage | [C] | Needs sequence minibatches; not started |
 | RMA latent-regression training loop | [C] | Models exist; the fit loop does not |
 | Ablation configs wiring the suite to trained checkpoints | [C] | Harness exists; nothing to load yet |
-| EKF / UKF base-state estimation | [E] | |
+| UKF, for comparison against the EKF | [E] | |
 | Sensor models: IMU, encoders, contact, depth | [E] | |
 | Frame transforms (world/body/sensor/joint) | [E] | |
 | PD, trajectory tracking, MPC interface | [E] | |
